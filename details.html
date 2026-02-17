@@ -68,7 +68,7 @@ border:1px solid rgba(255,79,179,0.35);">
 box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 0 2px rgba(255,79,179,0.10) inset;">
 
   <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
-    <div style="font-weight:750; letter-spacing:.2px;">Видеообзор</div>
+    <div style="font-weight:750; letter-spacing:.2px;">Очень крутое видео</div>
     <div style="font-size:12px; padding:6px 10px; border-radius:999px; background:rgba(255,79,179,0.16); border:1px solid rgba(255,79,179,0.35);">
       YouTube • встроенный плеер
     </div>
@@ -93,7 +93,32 @@ background:rgba(255,255,255,0.04); box-shadow: 0 18px 40px rgba(0,0,0,0.55);">
     </a>.
   </div>
 </div>
+<!-- Подписка -->
+<div style="margin-top:16px; padding:16px; border-radius:16px; background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,79,179,0.28);">
 
+  <div style="font-weight:750; margin-bottom:8px;">
+    Получать новости и скидки
+  </div>
+
+  <form id="subscribeForm" style="display:flex; gap:10px; flex-wrap:wrap;">
+    <input id="emailInput" type="email" required placeholder="Введите email"
+      style="flex:1; min-width:220px; padding:12px 14px; border-radius:14px;
+      border:1px solid rgba(255,255,255,0.18);
+      background:rgba(0,0,0,0.25); color:#fff; outline:none;" />
+
+    <button type="submit"
+      style="cursor:pointer; border:0; border-radius:14px;
+      padding:12px 16px; font-weight:800;
+      background:#fff; color:#0b0c10;">
+      Подписаться
+    </button>
+  </form>
+
+  <div style="margin-top:8px; font-size:12px; opacity:.75;">
+    Учебная форма: отправка фиксируется в аналитике.
+  </div>
+</div>
       <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
         <button id="buyBtn2" style="cursor:pointer; border:0; border-radius:14px; padding:12px 16px; font-weight:700;
 background:linear-gradient(135deg,#ff4fb3,#ff86cf); color:#0b0c10; box-shadow:0 10px 22px rgba(255,79,179,0.18);">
@@ -111,13 +136,40 @@ background:linear-gradient(135deg,#ff4fb3,#ff86cf); color:#0b0c10; box-shadow:0 
     </div>
   </div>
 
-  <script>
-    // Цель "Покупка" на второй странице тоже должна срабатывать
-    const buyBtn2 = document.getElementById('buyBtn2');
-    buyBtn2.addEventListener('click', () => {
-      try { window.ym && window.ym(106875241, 'reachGoal', 'buy_click'); } catch(e) {}
-      alert('Учебная покупка оформлена (демо).');
+<script>
+  const buyBtn2 = document.getElementById('buyBtn2');
+
+  buyBtn2.addEventListener('click', () => {
+    // Yandex Metrika goal
+    try { window.ym && window.ym(106875241, 'reachGoal', 'buy_click'); } catch(e) {}
+
+    // GA4 event
+    try {
+      window.gtag && gtag('event', 'buy_click', {
+        page_name: 'details',
+        page_path: location.pathname
+      });
+    } catch(e) {}
+
+    alert('Учебная покупка оформлена (демо).');
+  });
+
+  // (опционально) событие "назад на главную"
+  const backLink = document.getElementById('backHome');
+  if (backLink) {
+    backLink.addEventListener('click', () => {
+      try { window.gtag && gtag('event', 'back_to_home', { page_name: 'details' }); } catch(e) {}
     });
-  </script>
+  }
+
+  // (опционально) событие "клик по ссылке YouTube"
+  const ytLink = document.getElementById('ytOpen');
+  if (ytLink) {
+    ytLink.addEventListener('click', () => {
+      try { window.gtag && gtag('event', 'youtube_open', { page_name: 'details' }); } catch(e) {}
+    });
+  }
+</script>
+    
 </body>
 </html>
