@@ -99,6 +99,27 @@
           3) Поведение (страницы входа, популярные страницы, глубина).
         </p>
       </aside>
+            <aside class="card">
+        <h2 style="margin:0 0 10px;">Что собирать в Метрике</h2>
+        <p class="muted">Рекомендуемые отчёты для ЛР №1:</p>
+        <p class="small" style="margin-top:10px;">
+          1) Посещаемость (визиты, посетители, отказы, время).<br/>
+          2) Источники (поиск, прямые, соцсети).<br/>
+          3) Поведение (страницы входа, популярные страницы, глубина).
+        </p>
+      </aside>
+
+      <!-- НОВЫЙ БЛОК: ссылка на статью -->
+      <section class="card" style="grid-column: 1 / -1;">
+        <h2 style="margin:0 0 10px;">Статья</h2>
+        <p class="muted">Добавили отдельную страницу со статьёй для анализа популярности контента.</p>
+        <div class="row">
+          <a id="goArticle" href="./article.html" class="btn btn-primary" style="text-decoration:none;">
+            Читать статью
+          </a>
+          <span class="small">Цель: переход на статью</span>
+        </div>
+      </section>
     </div>
   </div>
 
@@ -111,6 +132,15 @@
     const detailsBtn = document.getElementById('detailsBtn');
     const subForm = document.getElementById('subForm');
     const okMsg = document.getElementById('okMsg');
+
+        const goArticle = document.getElementById('goArticle');
+
+    if (goArticle) {
+      goArticle.addEventListener('click', () => {
+        try { window.ym && window.ym(106875241, 'reachGoal', 'article_click'); } catch(e) {}
+        try { window.gtag && gtag('event', 'article_click', { page: 'index.html' }); } catch(e) {}
+      });
+    }
 
     buyBtn.addEventListener('click', () => {
       // событие для Метрики
@@ -132,21 +162,11 @@
       subForm.reset();
     });
   </script>
-  <div style="margin-top:20px;">
-  <a href="./article.html"
-     style="display:inline-block; margin:10px; padding:12px 16px;
-     border-radius:14px; background:#fff; color:#0b0c10; font-weight:600; text-decoration:none;">
-     Читать статью
-  </a>
-</div>
-  <a href="./article.html" 
-   style="display:inline-block; margin:10px; padding:12px 16px; 
-   border-radius:14px; background:#fff; color:#0b0c10; font-weight:600; text-decoration:none;">
-   Читать статью
-</a>
+
 </body>
 
 </html>
+
 
 
 
