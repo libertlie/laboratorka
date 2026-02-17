@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Учебный лендинг — Mini Shop</title>
+  <meta name="description" content="Учебный лендинг для лабораторной по веб-аналитике (Yandex.Metrica): кнопка, форма, цели." />
+
+  <!-- ✅ ВСТАВЬ СЮДА КОД YANDEX.METRICA (из metrika.yandex.ru) -->
+  <!-- Пример-место:
+  <script type="text/javascript" >
+     (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+     m[i].l=1*new Date();
+     for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+     k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+     (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+     ym(XXXXXXXX, "init", {
+          clickmap:true,
+          trackLinks:true,
+          accurateTrackBounce:true,
+          webvisor:true
+     });
+  </script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/XXXXXXXX" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+  -->
+  <!-- ✅ КОНЕЦ МЕСТА ДЛЯ МЕТРИКИ -->
+
+  <style>
+    :root { --radius: 18px; }
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: #0b0c10; color: #f6f7fb; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 32px 16px 60px; }
+    .hero { display: grid; gap: 16px; padding: 28px; border-radius: var(--radius); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
+    h1 { font-size: 34px; margin: 0; }
+    p { margin: 0; opacity: 0.9; line-height: 1.45; }
+    .grid { margin-top: 20px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 16px; }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+    .card { padding: 22px; border-radius: var(--radius); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
+    .btn { cursor: pointer; border: 0; border-radius: 14px; padding: 12px 16px; font-weight: 600; }
+    .btn-primary { background: #ffffff; color: #0b0c10; }
+    .btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.22); }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 14px; }
+    label { display: block; font-size: 13px; opacity: 0.9; margin-bottom: 6px; }
+    input { width: 100%; box-sizing: border-box; padding: 12px 12px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.22); background: rgba(0,0,0,0.15); color: #fff; }
+    .small { font-size: 13px; opacity: 0.75; }
+    .ok { margin-top: 12px; padding: 12px; border-radius: 14px; background: rgba(0,255,160,0.12); border: 1px solid rgba(0,255,160,0.22); display: none; }
+    .muted { opacity: 0.75; }
+    .kpi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+    .kpi > div { padding: 14px; border-radius: 14px; background: rgba(0,0,0,0.18); border: 1px solid rgba(255,255,255,0.10); }
+    .kpi b { font-size: 18px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Mini Shop — учебный лендинг</h1>
+      <p class="muted">Страница сделана для лабораторной по веб-аналитике: здесь есть кнопка “Купить” и форма “Подписаться”, чтобы настроить цели в Яндекс.Метрике.</p>
+      <div class="kpi">
+        <div><div class="small">Продукт</div><b>Подарочный бокс</b></div>
+        <div><div class="small">Доставка</div><b>1–3 дня</b></div>
+        <div><div class="small">Цена</div><b>1 990 ₽</b></div>
+      </div>
+      <div class="row">
+        <button id="buyBtn" class="btn btn-primary">Купить</button>
+        <button id="detailsBtn" class="btn btn-ghost">Подробнее</button>
+        <span class="small">Цель: клик по “Купить”</span>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <h2 style="margin:0 0 10px;">Подписка на новости</h2>
+        <p class="muted">Оставь email — и мы пришлём скидку на следующий заказ. Цель: отправка формы.</p>
+
+        <form id="subForm" style="margin-top:14px;">
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="name@example.com" required />
+          </div>
+          <div class="row">
+            <button class="btn btn-primary" type="submit">Подписаться</button>
+            <span class="small">Цель: submit формы</span>
+          </div>
+          <div id="okMsg" class="ok">Спасибо! Заявка принята ✅</div>
+          <div class="small" style="margin-top:10px;">* Учебный проект. Данные не сохраняются.</div>
+        </form>
+      </section>
+
+      <aside class="card">
+        <h2 style="margin:0 0 10px;">Что собирать в Метрике</h2>
+        <p class="muted">Рекомендуемые отчёты для ЛР №1:</p>
+        <p class="small" style="margin-top:10px;">
+          1) Посещаемость (визиты, посетители, отказы, время).<br/>
+          2) Источники (поиск, прямые, соцсети).<br/>
+          3) Поведение (страницы входа, популярные страницы, глубина).
+        </p>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    // 👇 Эти вызовы пригодятся для целей через JavaScript-события в Метрике
+    // В Метрике можно сделать цель типа "JavaScript-событие" и указать имена:
+    // buy_click, details_click, subscribe_submit
+
+    const buyBtn = document.getElementById('buyBtn');
+    const detailsBtn = document.getElementById('detailsBtn');
+    const subForm = document.getElementById('subForm');
+    const okMsg = document.getElementById('okMsg');
+
+    buyBtn.addEventListener('click', () => {
+      // событие для Метрики
+      try { window.ym && window.ym(null, 'reachGoal', 'buy_click'); } catch(e) {}
+      alert('Учебная покупка оформлена (демо).');
+    });
+
+    detailsBtn.addEventListener('click', () => {
+      try { window.ym && window.ym(null, 'reachGoal', 'details_click'); } catch(e) {}
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    });
+
+    subForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      try { window.ym && window.ym(null, 'reachGoal', 'subscribe_submit'); } catch(e) {}
+      okMsg.style.display = 'block';
+      subForm.reset();
+    });
+  </script>
+</body>
+</html>
