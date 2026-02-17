@@ -47,7 +47,12 @@
     
 </head>
 
-<body style="margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#0b0c10; color:#f6f7fb;">
+<body style="margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; <body style="margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+background:
+radial-gradient(700px 420px at 20% 10%, rgba(255,79,179,0.18), transparent 60%),
+radial-gradient(620px 380px at 85% 15%, rgba(255,134,207,0.12), transparent 60%),
+#0b0c10;
+color:#f6f7fb;"> color:#f6f7fb;">
   <div style="max-width:980px; margin:0 auto; padding:32px 16px 60px;">
     <div style="padding:22px; border-radius:18px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);">
       <h1 style="margin:0 0 10px;">Подробнее о продукте</h1>
@@ -56,8 +61,40 @@
         (Учебная страница для анализа пути пользователя в Yandex.Metrica.)
       </p>
 
+        <!-- Видеообзор -->
+<div style="margin-top:18px; padding:16px; border-radius:16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,79,179,0.35);
+box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 0 2px rgba(255,79,179,0.10) inset;">
+
+  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+    <div style="font-weight:750; letter-spacing:.2px;">Видеообзор</div>
+    <div style="font-size:12px; padding:6px 10px; border-radius:999px; background:rgba(255,79,179,0.16); border:1px solid rgba(255,79,179,0.35);">
+      YouTube • встроенный плеер
+    </div>
+  </div>
+
+  <div style="position:relative; width:100%; padding-top:56.25%; border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,0.12);
+background:rgba(255,255,255,0.04); box-shadow: 0 18px 40px rgba(0,0,0,0.55);">
+    <iframe
+      src="https://www.youtube.com/embed/phRn9Thc1zc"
+      title="Очень крутое видео"
+      style="position:absolute; inset:0; width:100%; height:100%; border:0;"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <div style="margin-top:10px; font-size:13px; opacity:.8; line-height:1.45;">
+    Если видео не отображается, открой его в
+    <a href="https://www.youtube.com/watch?v=phRn9Thc1zc" target="_blank" rel="noopener noreferrer"
+       style="color:#ff86cf; text-decoration:none; border-bottom:1px dashed rgba(255,134,207,0.7);">
+      YouTube
+    </a>.
+  </div>
+</div>
+
       <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
-        <button id="buyBtn2" style="cursor:pointer; border:0; border-radius:14px; padding:12px 16px; font-weight:600; background:#fff; color:#0b0c10;">
+        <button id="buyBtn2" style="cursor:pointer; border:0; border-radius:14px; padding:12px 16px; font-weight:700;
+background:linear-gradient(135deg,#ff4fb3,#ff86cf); color:#0b0c10; box-shadow:0 10px 22px rgba(255,79,179,0.18);">
           Купить
         </button>
 
