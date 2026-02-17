@@ -109,9 +109,11 @@
     });
 
     detailsBtn.addEventListener('click', () => {
-      try { window.ym && window.ym(106875241, 'reachGoal', 'details_click'); } catch(e) {}
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    });
+  try { window.ym && window.ym(106875241, 'reachGoal', 'details_click'); } catch(e) {}
+  setTimeout(() => {
+    window.location.href = './details.html';
+  }, 150);
+});
 
     subForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -123,4 +125,5 @@
 </body>
 
 </html>
+
 
