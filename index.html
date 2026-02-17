@@ -104,18 +104,18 @@
 
     buyBtn.addEventListener('click', () => {
       // событие для Метрики
-      try { window.ym && window.ym(null, 'reachGoal', 'buy_click'); } catch(e) {}
+      try { window.ym && window.ym(106875241, 'reachGoal', 'buy_click'); } catch(e) {}
       alert('Учебная покупка оформлена (демо).');
     });
 
     detailsBtn.addEventListener('click', () => {
-      try { window.ym && window.ym(null, 'reachGoal', 'details_click'); } catch(e) {}
+      try { window.ym && window.ym(106875241, 'reachGoal', 'details_click'); } catch(e) {}
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     });
 
     subForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      try { window.ym && window.ym(null, 'reachGoal', 'subscribe_submit'); } catch(e) {}
+      try { window.ym && window.ym(106875241, 'reachGoal', 'subscribe_submit'); } catch(e) {}
       okMsg.style.display = 'block';
       subForm.reset();
     });
@@ -123,3 +123,4 @@
 </body>
 
 </html>
+
