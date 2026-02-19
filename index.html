@@ -276,24 +276,50 @@
     }
 
     const buyBtn = document.getElementById('buyBtn');
+    <script>
+  // helpers for analytics
+  const MID = 106875241;
+
+  function fireM(goal){
+    try { window.ym && window.ym(MID, 'reachGoal', goal); } catch(e) {}
+  }
+  function fireGA(name, params={}){
+    try { window.gtag && gtag('event', name, { page_path: location.pathname, ...params }); } catch(e) {}
+  }
+
+  const buyBtn = document.getElementById('buyBtn');
+
+  // ===== A/B TEST (Buy button text) =====
+  let abVariant = localStorage.getItem('ab_buybtn_variant');
+  if (!abVariant) {
+    abVariant = Math.random() < 0.5 ? 'A' : 'B';
+    localStorage.setItem('ab_buybtn_variant', abVariant);
+  }
+
+  // Вариант B: меняем текст кнопки
+  if (buyBtn && abVariant === 'B') {
+    buyBtn.textContent = 'Купить сейчас';
+  }
+
+  fireGA('ab_buybtn_view', { variant: abVariant, page: 'index.html' });
     const subForm = document.getElementById('subForm');
-    const okMsg = document.getElementById('okMsg');
+  const okMsg = document.getElementById('okMsg');
 
-    const detailsBtn = document.getElementById('detailsBtn');
-    const goArticle = document.getElementById('goArticle');
-    const goArticle2 = document.getElementById('goArticle2');
-    const goDetails2 = document.getElementById('goDetails2');
+  const detailsBtn = document.getElementById('detailsBtn');
+  const goArticle = document.getElementById('goArticle');
+  const goArticle2 = document.getElementById('goArticle2');
+  const goDetails2 = document.getElementById('goDetails2');
 
-    // buy click
-    if (buyBtn){
-      buyBtn.addEventListener('click', () => {
-        fireM('buy_click');
-        fireGA('buy_click', { page: 'index.html' });
-        alert('Учебная покупка оформлена (демо).');
-      });
-    }
+  // buy click
+  if (buyBtn){
+    buyBtn.addEventListener('click', () => {
+      fireM('buy_click');
+      fireGA('buy_click', { page: 'index.html', variant: abVariant }); // <-- добавили variant
+      alert('Учебная покупка оформлена (демо).');
+    });
+  }
 
-    // details click (у ссылки href уже есть, просто логируем)
+
     if (detailsBtn){
       detailsBtn.addEventListener('click', () => {
         fireM('details_click');
@@ -330,10 +356,10 @@
         okMsg.style.display = 'block';
         subForm.reset();
 
-        // спрячем сообщение через 2.5 сек (приятнее)
         setTimeout(() => { okMsg.style.display = 'none'; }, 2500);
       });
     }
   </script>
 </body>
 </html>
+
