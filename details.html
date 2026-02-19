@@ -88,33 +88,36 @@ border:1px solid rgba(255,79,179,0.35);">
 </div>
 
 <!-- Модалка корзины -->
-<div id="cartModal"
-  style="position:fixed; inset:0; display:none; align-items:center; justify-content:center;
-  background:rgba(0,0,0,0.62); padding:16px; z-index:9999; pointer-events:none;">
 
-  <div style="width:min(720px, 96%); border-radius:18px; padding:18px;
-    background:rgba(20,12,22,0.92);
-    border:1px solid rgba(255,79,179,0.35);
-    box-shadow:0 25px 70px rgba(0,0,0,0.65);">
-
-    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px;">
-      <div style="font-weight:900; font-size:18px;">Ваша корзина</div>
-      <button id="closeCartBtn"
-        style="cursor:pointer; border:0; border-radius:12px; padding:8px 12px; font-weight:900;
-        background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.18);">
-        ✕
-      </button>
-    </div>
 
     <div id="cartItems"
       style="display:flex; flex-direction:column; gap:10px; max-height:45vh; overflow:auto; padding-right:6px;">
       <!-- items here -->
     </div>
 
-    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-top:14px;">
-      <div style="font-size:14px; opacity:.9;">
-        Итого: <b id="cartTotalModal">0</b> ₽
-      </div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+
+  <button id="addToCartBtn" style="cursor:pointer; border:0; border-radius:14px; padding:12px 16px; font-weight:800;
+  background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,79,179,0.45);">
+    В корзину
+  </button>
+
+  <button id="buyBtn2" style="cursor:pointer; border:0; border-radius:14px; padding:12px 16px; font-weight:700;
+  background:linear-gradient(135deg,#ff4fb3,#ff86cf); color:#0b0c10; box-shadow:0 10px 22px rgba(255,79,179,0.18);">
+    Купить
+  </button>
+
+  <a href="./cart.html" id="goToCartLink" style="display:inline-block; border-radius:14px; padding:12px 16px; font-weight:800;
+  color:#fff; text-decoration:none; border:1px solid rgba(255,79,179,0.45); background:rgba(255,79,179,0.14);">
+    Перейти в корзину
+  </a>
+
+  <a href="./index.html" id="backHome" style="display:inline-block; border-radius:14px; padding:12px 16px; font-weight:600; color:#fff;
+  text-decoration:none; border:1px solid rgba(255,255,255,0.22);">
+    Назад на главную
+  </a>
+
+</div>
 
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button id="checkoutBtn"
@@ -206,8 +209,14 @@ background:linear-gradient(135deg,#ff4fb3,#ff86cf); color:#0b0c10; box-shadow:0 
   </div>
 
 <script>
-  // ===== Helpers =====
   const CART_KEY = 'minishop_cart_v1';
+
+  // demo product (можешь поменять цену/название)
+  const PRODUCT = {
+    id: 'giftbox_1',
+    name: 'Подарочный бокс (демо)',
+    price: 1290
+  };
 
   function loadCart() {
     try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
@@ -218,19 +227,21 @@ background:linear-gradient(135deg,#ff4fb3,#ff86cf); color:#0b0c10; box-shadow:0 
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
   }
 
-  function cartTotals(cart) {
-    const count = cart.reduce((s, it) => s + it.qty, 0);
-    const total = cart.reduce((s, it) => s + it.qty * it.price, 0);
-    return { count, total };
+  function addToCart(product) {
+    const cart = loadCart();
+    const found = cart.find(it => it.id === product.id);
+    if (found) found.qty += 1;
+    else cart.push({ ...product, qty: 1 });
+    saveCart(cart);
   }
 
-  function fireMetrika(goal) {
+  function fireM(goal) {
     try { window.ym && window.ym(106875241, 'reachGoal', goal); } catch(e) {}
   }
 
-  function fireGA(eventName, params = {}) {
+  function fireGA(name, params = {}) {
     try {
-      window.gtag && gtag('event', eventName, {
+      window.gtag && gtag('event', name, {
         page_name: 'details',
         page_path: location.pathname,
         ...params
@@ -238,193 +249,57 @@ background:linear-gradient(135deg,#ff4fb3,#ff86cf); color:#0b0c10; box-shadow:0 
     } catch(e) {}
   }
 
-  // ===== DOM refs =====
+  const addToCartBtn = document.getElementById('addToCartBtn');
   const buyBtn2 = document.getElementById('buyBtn2');
   const subscribeForm = document.getElementById('subscribeForm');
+  const goToCartLink = document.getElementById('goToCartLink');
 
-  const addToCartBtn = document.getElementById('addToCartBtn');
-  const cartCount = document.getElementById('cartCount');
-  const cartTotal = document.getElementById('cartTotal');
-  const openCartBtn = document.getElementById('openCartBtn');
-  const clearCartBtn = document.getElementById('clearCartBtn');
+  // В корзину
+  if (addToCartBtn) {
+    addToCartBtn.addEventListener('click', () => {
+      addToCart(PRODUCT);
 
-  const cartModal = document.getElementById('cartModal');
-  const closeCartBtn = document.getElementById('closeCartBtn');
-  const cartItems = document.getElementById('cartItems');
-  const cartTotalModal = document.getElementById('cartTotalModal');
-  const checkoutBtn = document.getElementById('checkoutBtn');
+      fireM('add_to_cart');
+      fireGA('add_to_cart', { item_id: PRODUCT.id, item_name: PRODUCT.name, price: PRODUCT.price });
 
-  // ===== Product (demo) =====
-  const PRODUCT = {
-    id: 'giftbox_1',
-    name: 'Подарочный бокс "SWAGA"',
-    price: 1290
-  };
-
-  // ===== UI render =====
-  function renderCart() {
-    const cart = loadCart();
-    const { count, total } = cartTotals(cart);
-
-    if (cartCount) cartCount.textContent = String(count);
-    if (cartTotal) cartTotal.textContent = String(total);
-    if (cartTotalModal) cartTotalModal.textContent = String(total);
-
-    if (!cartItems) return;
-
-    if (cart.length === 0) {
-      cartItems.innerHTML = `
-        <div style="padding:14px; border-radius:14px; background:rgba(255,255,255,0.05);
-          border:1px solid rgba(255,255,255,0.12); opacity:.9;">
-          Корзина пустая. Добавь товар кнопкой “В корзину”.
-        </div>`;
-      return;
-    }
-
-    cartItems.innerHTML = cart.map((it, idx) => `
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
-        padding:12px; border-radius:14px; background:rgba(255,255,255,0.05);
-        border:1px solid rgba(255,255,255,0.12);">
-        <div>
-          <div style="font-weight:850;">${it.name}</div>
-          <div style="font-size:13px; opacity:.85;">${it.price} ₽ · Кол-во: <b>${it.qty}</b></div>
-        </div>
-
-        <div style="display:flex; gap:8px; align-items:center;">
-          <button data-action="minus" data-idx="${idx}"
-            style="cursor:pointer; border:0; border-radius:12px; padding:8px 10px; font-weight:900;
-            background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.16);">−</button>
-
-          <button data-action="plus" data-idx="${idx}"
-            style="cursor:pointer; border:0; border-radius:12px; padding:8px 10px; font-weight:900;
-            background:rgba(255,79,179,0.18); color:#fff; border:1px solid rgba(255,79,179,0.35);">+</button>
-
-          <button data-action="remove" data-idx="${idx}"
-            style="cursor:pointer; border:0; border-radius:12px; padding:8px 10px; font-weight:900;
-            background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.16);">Удалить</button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-function openModal() {
-  cartModal.style.display = 'flex';
-  cartModal.style.pointerEvents = 'auto';
-  renderCart();
-}
-
-function closeModal() {
-  cartModal.style.display = 'none';
-  cartModal.style.pointerEvents = 'none';
-}
-
-  // ===== Cart actions =====
-  function addToCart(product) {
-    const cart = loadCart();
-    const found = cart.find(it => it.id === product.id);
-    if (found) found.qty += 1;
-    else cart.push({ ...product, qty: 1 });
-    saveCart(cart);
-    renderCart();
-
-    fireMetrika('add_to_cart');
-    fireGA('add_to_cart', { item_id: product.id, item_name: product.name, price: product.price });
-
-    if (addToCartBtn) {
       const old = addToCartBtn.textContent;
       addToCartBtn.textContent = 'Добавлено ✓';
       setTimeout(() => addToCartBtn.textContent = old, 900);
-    }
-  }
-
-  function clearCart() {
-    saveCart([]);
-    renderCart();
-    fireMetrika('cart_clear');
-    fireGA('cart_clear');
-  }
-
-  // ===== Existing: BUY click =====
-  if (buyBtn2) {
-    buyBtn2.addEventListener('click', () => {
-      fireMetrika('buy_click');
-      fireGA('buy_click');
-
-      alert('Покупка оформлена! 
-            Деньги с карты не спишем :)');
     });
   }
 
-  // ===== Subscribe form =====
+  // Купить = добавить + перейти в корзину
+  if (buyBtn2) {
+    buyBtn2.addEventListener('click', () => {
+      addToCart(PRODUCT);
+
+      fireM('begin_checkout');
+      fireGA('begin_checkout', { item_id: PRODUCT.id, item_name: PRODUCT.name, price: PRODUCT.price });
+
+      // переход на страницу корзины
+      window.location.href = './cart.html';
+    });
+  }
+
+  // Переход в корзину (событие)
+  if (goToCartLink) {
+    goToCartLink.addEventListener('click', () => {
+      fireGA('cart_open_link');
+    });
+  }
+
+  // Подписка
   if (subscribeForm) {
     subscribeForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      fireMetrika('subscribe_submit');
+      fireM('subscribe_submit');
       fireGA('subscribe_submit');
 
-      alert('Спасибо за подписку! Обещаем не присылать спам');
+      alert('Подписка оформлена (демо).');
       subscribeForm.reset();
     });
   }
-
-  // ===== Wire cart buttons =====
-  if (addToCartBtn) addToCartBtn.addEventListener('click', () => addToCart(PRODUCT));
-  if (openCartBtn) openCartBtn.addEventListener('click', openModal);
-  if (clearCartBtn) clearCartBtn.addEventListener('click', clearCart);
-  if (closeCartBtn) closeCartBtn.addEventListener('click', closeModal);
-
-  // click outside modal closes
-  if (cartModal) {
-    cartModal.addEventListener('click', (e) => {
-      if (e.target === cartModal) closeModal();
-    });
-  }
-
-  // handle +/-/remove in modal via event delegation
-  if (cartItems) {
-    cartItems.addEventListener('click', (e) => {
-      const btn = e.target.closest('button');
-      if (!btn) return;
-
-      const action = btn.getAttribute('data-action');
-      const idx = Number(btn.getAttribute('data-idx'));
-      const cart = loadCart();
-      if (!cart[idx]) return;
-
-      if (action === 'plus') {
-        cart[idx].qty += 1;
-        fireGA('cart_qty_plus', { item_id: cart[idx].id });
-      } else if (action === 'minus') {
-        cart[idx].qty -= 1;
-        fireGA('cart_qty_minus', { item_id: cart[idx].id });
-        if (cart[idx].qty <= 0) cart.splice(idx, 1);
-      } else if (action === 'remove') {
-        fireGA('cart_remove', { item_id: cart[idx].id });
-        cart.splice(idx, 1);
-      }
-
-      saveCart(cart);
-      renderCart();
-    });
-  }
-
-  // checkout demo
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener('click', () => {
-      const cart = loadCart();
-      const { total, count } = cartTotals(cart);
-
-      fireMetrika('checkout_demo');
-      fireGA('checkout_demo', { total_value: total, items_count: count });
-
-      alert('Оформление заказа (демо).');
-      closeModal();
-    });
-  }
-
-  // initial render
-  renderCart();
 </script>
     
 </body>
