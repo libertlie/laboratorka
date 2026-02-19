@@ -58,9 +58,77 @@ color:#f6f7fb;">
 background:rgba(20, 12, 22, 0.75);
 border:1px solid rgba(255,79,179,0.35);">
       <h1 style="margin:0 0 10px;">Подробнее о продукте</h1>
+        <!-- Мини-корзина -->
+<div id="miniCart"
+  style="margin-top:14px; padding:14px; border-radius:16px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,79,179,0.28);
+  display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+
+  <div>
+    <div style="font-weight:800;">Корзина</div>
+    <div style="font-size:13px; opacity:.85;">
+      Товаров: <b id="cartCount">0</b> · Сумма: <b id="cartTotal">0</b> ₽
+    </div>
+  </div>
+
+  <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <button id="openCartBtn"
+      style="cursor:pointer; border:0; border-radius:14px; padding:10px 14px; font-weight:800;
+      background:rgba(255,79,179,0.18); color:#fff; border:1px solid rgba(255,79,179,0.35);">
+      Открыть
+    </button>
+
+    <button id="clearCartBtn"
+      style="cursor:pointer; border:0; border-radius:14px; padding:10px 14px; font-weight:800;
+      background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.18);">
+      Очистить
+    </button>
+  </div>
+</div>
+
+<!-- Модалка корзины -->
+<div id="cartModal"
+  style="position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+  background:rgba(0,0,0,0.62); padding:16px; z-index:9999;">
+
+  <div style="width:min(720px, 96%); border-radius:18px; padding:18px;
+    background:rgba(20,12,22,0.92);
+    border:1px solid rgba(255,79,179,0.35);
+    box-shadow:0 25px 70px rgba(0,0,0,0.65);">
+
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px;">
+      <div style="font-weight:900; font-size:18px;">Ваша корзина</div>
+      <button id="closeCartBtn"
+        style="cursor:pointer; border:0; border-radius:12px; padding:8px 12px; font-weight:900;
+        background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.18);">
+        ✕
+      </button>
+    </div>
+
+    <div id="cartItems"
+      style="display:flex; flex-direction:column; gap:10px; max-height:45vh; overflow:auto; padding-right:6px;">
+      <!-- items here -->
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-top:14px;">
+      <div style="font-size:14px; opacity:.9;">
+        Итого: <b id="cartTotalModal">0</b> ₽
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button id="checkoutBtn"
+          style="cursor:pointer; border:0; border-radius:14px; padding:10px 14px; font-weight:900;
+          background:linear-gradient(135deg,#ff4fb3,#ff86cf); color:#0b0c10;">
+          Оформить (демо)
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
       <p style="opacity:.9; line-height:1.45; margin:0 0 12px;">
         Подарочный бокс: состав, преимущества, условия доставки, гарантия и ответы на вопросы.
-        (Учебная страница для анализа пути пользователя в Yandex.Metrica.)
       </p>
 
         <!-- Видеообзор -->
@@ -120,6 +188,10 @@ border:1px solid rgba(255,79,179,0.28);">
   </div>
 </div>
       <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+          <button id="addToCartBtn" style="cursor:pointer; border:0; border-radius:14px; padding:12px 16px; font-weight:800;
+background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,79,179,0.45);">
+  В корзину
+</button>
         <button id="buyBtn2" style="cursor:pointer; border:0; border-radius:14px; padding:12px 16px; font-weight:700;
 background:linear-gradient(135deg,#ff4fb3,#ff86cf); color:#0b0c10; box-shadow:0 10px 22px rgba(255,79,179,0.18);">
           Купить
