@@ -11,7 +11,7 @@
   (function(m,e,t,r,i,k,a){
     m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
-    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+    for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
     k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
   })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=106875241', 'ym');
 
@@ -76,9 +76,7 @@
     }
 
     .topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-    .brand{
-      display:flex;flex-direction:column;gap:4px;
-    }
+    .brand{display:flex;flex-direction:column;gap:4px;}
     .brand small{opacity:.72}
     h1{margin:0;font-size:34px;letter-spacing:.2px}
     p{margin:0;line-height:1.5;color:var(--muted)}
@@ -186,7 +184,6 @@
 
     .full{grid-column:1 / -1}
     .small{font-size:13px;opacity:.78}
-
     .footerNote{margin-top:12px;font-size:12px;opacity:.72}
   </style>
 </head>
@@ -198,7 +195,7 @@
       <div class="topline">
         <div class="brand">
           <small>Учебный проект</small>
-          <h1>Pryles Shop </h1>
+          <h1>Pryles Shop</h1>
         </div>
 
         <div class="badges">
@@ -221,7 +218,6 @@
         <a id="detailsBtn" class="btn btn-ghost" href="./details.html">Подробнее</a>
         <a id="goArticle" class="btn btn-ghost" href="./article.html">Читать статью</a>
       </div>
-
     </section>
 
     <div class="grid">
@@ -254,7 +250,7 @@
 
       <section class="card full">
         <h2>Контент для анализа</h2>
-        <p class="small">Добавили страницу статьи </p>
+        <p class="small">Добавили страницу статьи</p>
         <div class="row" style="margin-top:12px;">
           <a class="btn btn-primary" href="./article.html" id="goArticle2">Открыть статью</a>
           <a class="btn btn-ghost" href="./details.html" id="goDetails2">Открыть «Подробнее»</a>
@@ -275,92 +271,81 @@
       try { window.gtag && gtag('event', name, { page_path: location.pathname, ...params }); } catch(e) {}
     }
 
+    // Elements
     const buyBtn = document.getElementById('buyBtn');
-   <script>
-  // helpers for analytics
-  const MID = 106875241;
+    const subForm = document.getElementById('subForm');
+    const okMsg = document.getElementById('okMsg');
 
-  function fireM(goal){
-    try { window.ym && window.ym(MID, 'reachGoal', goal); } catch(e) {}
-  }
-  function fireGA(name, params={}){
-    try { window.gtag && gtag('event', name, { page_path: location.pathname, ...params }); } catch(e) {}
-  }
+    const detailsBtn = document.getElementById('detailsBtn');
+    const goArticle = document.getElementById('goArticle');
+    const goArticle2 = document.getElementById('goArticle2');
+    const goDetails2 = document.getElementById('goDetails2');
 
-  const buyBtn = document.getElementById('buyBtn');
-  const subForm = document.getElementById('subForm');
-  const okMsg = document.getElementById('okMsg');
+    // ===== A/B TEST: Buy button text =====
+    let abVariant = localStorage.getItem('ab_buybtn_variant');
+    if (!abVariant) {
+      abVariant = Math.random() < 0.5 ? 'A' : 'B';
+      localStorage.setItem('ab_buybtn_variant', abVariant);
+    }
 
-  const detailsBtn = document.getElementById('detailsBtn');
-  const goArticle = document.getElementById('goArticle');
-  const goArticle2 = document.getElementById('goArticle2');
-  const goDetails2 = document.getElementById('goDetails2');
+    // Variant B changes button text
+    if (buyBtn && abVariant === 'B') {
+      buyBtn.textContent = 'Купить сейчас';
+    } else if (buyBtn) {
+      buyBtn.textContent = 'Купить';
+    }
 
-  // ===== A/B TEST (Buy button text) =====
-  let abVariant = localStorage.getItem('ab_buybtn_variant');
-  if (!abVariant) {
-    abVariant = Math.random() < 0.5 ? 'A' : 'B';
-    localStorage.setItem('ab_buybtn_variant', abVariant);
-  }
+    // Log variant view
+    fireGA('ab_buybtn_view', { variant: abVariant, page: 'index.html' });
 
-  // Вариант B: меняем текст кнопки
-  if (buyBtn && abVariant === 'B') {
-    buyBtn.textContent = 'Купить сейчас';
-  }
+    // buy click
+    if (buyBtn){
+      buyBtn.addEventListener('click', () => {
+        fireM('buy_click');
+        fireGA('buy_click', { page: 'index.html', variant: abVariant });
+        alert('Учебная покупка оформлена (демо).');
+      });
+    }
 
-  // Логируем показ варианта
-  fireGA('ab_buybtn_view', { variant: abVariant, page: 'index.html' });
+    // details click
+    if (detailsBtn){
+      detailsBtn.addEventListener('click', () => {
+        fireM('details_click');
+        fireGA('details_click', { page: 'index.html' });
+      });
+    }
 
-  // buy click
-  if (buyBtn){
-    buyBtn.addEventListener('click', () => {
-      fireM('buy_click');
-      fireGA('buy_click', { page: 'index.html', variant: abVariant });
-      alert('Учебная покупка оформлена (демо).');
-    });
-  }
+    // article clicks
+    function hookArticleClick(el){
+      if (!el) return;
+      el.addEventListener('click', () => {
+        fireM('article_click');
+        fireGA('article_click', { page: 'index.html' });
+      });
+    }
+    hookArticleClick(goArticle);
+    hookArticleClick(goArticle2);
 
-  // details click
-  if (detailsBtn){
-    detailsBtn.addEventListener('click', () => {
-      fireM('details_click');
-      fireGA('details_click', { page: 'index.html' });
-    });
-  }
+    // details from bottom block
+    if (goDetails2){
+      goDetails2.addEventListener('click', () => {
+        fireM('details_click');
+        fireGA('details_click', { page: 'index.html', from: 'content_block' });
+      });
+    }
 
-  // article clicks
-  function hookArticleClick(el){
-    if (!el) return;
-    el.addEventListener('click', () => {
-      fireM('article_click');
-      fireGA('article_click', { page: 'index.html' });
-    });
-  }
-  hookArticleClick(goArticle);
-  hookArticleClick(goArticle2);
+    // subscribe
+    if (subForm){
+      subForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        fireM('subscribe_submit');
+        fireGA('subscribe_submit', { page: 'index.html' });
 
-  // details from bottom block
-  if (goDetails2){
-    goDetails2.addEventListener('click', () => {
-      fireM('details_click');
-      fireGA('details_click', { page: 'index.html', from: 'content_block' });
-    });
-  }
-
-  // subscribe
-  if (subForm){
-    subForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      fireM('subscribe_submit');
-      fireGA('subscribe_submit', { page: 'index.html' });
-
-      okMsg.style.display = 'block';
-      subForm.reset();
-      setTimeout(() => { okMsg.style.display = 'none'; }, 2500);
-    });
-  }
-</script>
+        okMsg.style.display = 'block';
+        subForm.reset();
+        setTimeout(() => { okMsg.style.display = 'none'; }, 2500);
+      });
+    }
+  </script>
 </body>
 </html>
-
-
