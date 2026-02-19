@@ -53,254 +53,208 @@ radial-gradient(700px 420px at 20% 10%, rgba(255,79,179,0.18), transparent 60%),
 radial-gradient(620px 380px at 85% 15%, rgba(255,134,207,0.12), transparent 60%),
 #0b0c10;
 color:#f6f7fb;">
+
   <div style="max-width:980px; margin:0 auto; padding:32px 16px 60px;">
-    <div style="padding:22px; border-radius:18px;
-background:rgba(20, 12, 22, 0.75);
-border:1px solid rgba(255,79,179,0.35);">
-      <h1 style="margin:0 0 10px;">Подробнее о продукте</h1>
-        <!-- Мини-корзина -->
-<div id="miniCart"
-  style="margin-top:14px; padding:14px; border-radius:16px;
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,79,179,0.28);
-  display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+    <div style="padding:22px; border-radius:18px; background:rgba(20, 12, 22, 0.75); border:1px solid rgba(255,79,179,0.35);">
 
-  <div>
-    <div style="font-weight:800;">Корзина</div>
-    <div style="font-size:13px; opacity:.85;">
-      Товаров: <b id="cartCount">0</b> · Сумма: <b id="cartTotal">0</b> ₽
-    </div>
-  </div>
+      <h1 style="margin:0 0 10px; color:#fff;">Подробнее о продукте</h1>
 
-  <div style="display:flex; gap:10px; flex-wrap:wrap;">
-    <button id="openCartBtn"
-      style="cursor:pointer; border:0; border-radius:14px; padding:10px 14px; font-weight:800;
-      background:rgba(255,79,179,0.18); color:#fff; border:1px solid rgba(255,79,179,0.35);">
-      Открыть
-    </button>
-
-    <button id="clearCartBtn"
-      style="cursor:pointer; border:0; border-radius:14px; padding:10px 14px; font-weight:800;
-      background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.18);">
-      Очистить
-    </button>
-  </div>
-</div>
-
-<!-- Модалка корзины -->
-
-
-    <div id="cartItems"
-      style="display:flex; flex-direction:column; gap:10px; max-height:45vh; overflow:auto; padding-right:6px;">
-      <!-- items here -->
-    </div>
-
-    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
-
-  <button id="addToCartBtn" style="cursor:pointer; border:0; border-radius:14px; padding:12px 16px; font-weight:800;
-  background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,79,179,0.45);">
-    В корзину
-  </button>
-
-  <button id="buyBtn2" style="cursor:pointer; border:0; border-radius:14px; padding:12px 16px; font-weight:700;
-  background:linear-gradient(135deg,#ff4fb3,#ff86cf); color:#0b0c10; box-shadow:0 10px 22px rgba(255,79,179,0.18);">
-    Купить
-  </button>
-
-  <a href="./cart.html" id="goToCartLink" style="display:inline-block; border-radius:14px; padding:12px 16px; font-weight:800;
-  color:#fff; text-decoration:none; border:1px solid rgba(255,79,179,0.45); background:rgba(255,79,179,0.14);">
-    Перейти в корзину
-  </a>
-
-  <a href="./index.html" id="backHome" style="display:inline-block; border-radius:14px; padding:12px 16px; font-weight:600; color:#fff;
-  text-decoration:none; border:1px solid rgba(255,255,255,0.22);">
-    Назад на главную
-  </a>
-
-</div>
-
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button id="checkoutBtn"
-          style="cursor:pointer; border:0; border-radius:14px; padding:10px 14px; font-weight:900;
-          background:linear-gradient(135deg,#ff4fb3,#ff86cf); color:#0b0c10;">
-          Оформить (демо)
-        </button>
-      </div>
-    </div>
-
-  </div>
-</div>
-      <p style="opacity:.9; line-height:1.45; margin:0 0 12px;">
+      <p style="opacity:.9; line-height:1.45; margin:0 0 12px; color:rgba(255,255,255,0.88);">
         Подарочный бокс: состав, преимущества, условия доставки, гарантия и ответы на вопросы.
       </p>
 
-        <!-- Видеообзор -->
-<div style="margin-top:18px; padding:16px; border-radius:16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,79,179,0.35);
-box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 0 2px rgba(255,79,179,0.10) inset;">
+      <!-- Мини-корзина (только счётчик) -->
+      <div id="miniCart"
+        style="margin-top:14px; padding:14px; border-radius:16px; background:rgba(255,255,255,0.05);
+        border:1px solid rgba(255,79,179,0.28); display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
 
-  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
-    <div style="font-weight:750; letter-spacing:.2px;">Очень крутое видео</div>
-    <div style="font-size:12px; padding:6px 10px; border-radius:999px; background:rgba(255,79,179,0.16); border:1px solid rgba(255,79,179,0.35);">
-      YouTube • встроенный плеер
-    </div>
-  </div>
+        <div>
+          <div style="font-weight:800;">Корзина</div>
+          <div style="font-size:13px; opacity:.85;">
+            Товаров: <b id="cartCount">0</b> · Сумма: <b id="cartTotal">0</b> ₽
+          </div>
+        </div>
 
-  <div style="position:relative; width:100%; padding-top:56.25%; border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,0.12);
-background:rgba(255,255,255,0.04); box-shadow: 0 18px 40px rgba(0,0,0,0.55);">
-    <iframe
-      src="https://www.youtube.com/embed/phRn9Thc1zc"
-      title="Очень крутое видео"
-      style="position:absolute; inset:0; width:100%; height:100%; border:0;"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen>
-    </iframe>
-  </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="./cart.html" id="goToCartLink"
+             style="display:inline-block; border-radius:14px; padding:10px 14px; font-weight:800;
+             color:#fff; text-decoration:none; border:1px solid rgba(255,79,179,0.45); background:rgba(255,79,179,0.14);">
+            Перейти в корзину
+          </a>
 
-  <div style="margin-top:10px; font-size:13px; opacity:.8; line-height:1.45;">
-    Если видео не отображается, открой его в
-    <a href="https://www.youtube.com/watch?v=phRn9Thc1zc" target="_blank" rel="noopener noreferrer"
-       style="color:#ff86cf; text-decoration:none; border-bottom:1px dashed rgba(255,134,207,0.7);">
-      YouTube
-    </a>.
-  </div>
-</div>
-<!-- Подписка -->
-<div style="margin-top:16px; padding:16px; border-radius:16px; background:rgba(255,255,255,0.05);
-border:1px solid rgba(255,79,179,0.28);">
+          <button id="clearCartBtn"
+            style="cursor:pointer; border:0; border-radius:14px; padding:10px 14px; font-weight:800;
+            background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.18);">
+            Очистить
+          </button>
+        </div>
+      </div>
 
-  <div style="font-weight:750; margin-bottom:8px;">
-    Получать новости и скидки
-  </div>
+      <!-- Видеообзор -->
+      <div style="margin-top:18px; padding:16px; border-radius:16px; background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,79,179,0.35); box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 0 2px rgba(255,79,179,0.10) inset;">
 
-  <form id="subscribeForm" style="display:flex; gap:10px; flex-wrap:wrap;">
-    <input id="emailInput" type="email" required placeholder="Введите email"
-      style="flex:1; min-width:220px; padding:12px 14px; border-radius:14px;
-      border:1px solid rgba(255,255,255,0.18);
-      background:rgba(0,0,0,0.25); color:#fff; outline:none;" />
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+          <div style="font-weight:750; letter-spacing:.2px;">Очень крутое видео</div>
+          <div style="font-size:12px; padding:6px 10px; border-radius:999px; background:rgba(255,79,179,0.16);
+          border:1px solid rgba(255,79,179,0.35);">
+            YouTube • встроенный плеер
+          </div>
+        </div>
 
-    <button type="submit"
-      style="cursor:pointer; border:0; border-radius:14px;
-      padding:12px 16px; font-weight:800;
-      background:#fff; color:#0b0c10;">
-      Подписаться
-    </button>
-  </form>
+        <div style="position:relative; width:100%; padding-top:56.25%; border-radius:14px; overflow:hidden;
+        border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); box-shadow: 0 18px 40px rgba(0,0,0,0.55);">
+          <iframe
+            src="https://www.youtube.com/embed/phRn9Thc1zc"
+            title="Очень крутое видео"
+            style="position:absolute; inset:0; width:100%; height:100%; border:0;"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
 
-  <div style="margin-top:8px; font-size:12px; opacity:.75;">
-    Учебная форма нужна для аналитики.
-  </div>
-</div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
-          <button id="addToCartBtn" style="cursor:pointer; border:0; border-radius:14px; padding:12px 16px; font-weight:800;
-background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,79,179,0.45);">
-  В корзину
-</button>
-        <button id="buyBtn2" style="cursor:pointer; border:0; border-radius:14px; padding:12px 16px; font-weight:700;
-background:linear-gradient(135deg,#ff4fb3,#ff86cf); color:#0b0c10; box-shadow:0 10px 22px rgba(255,79,179,0.18);">
+        <div style="margin-top:10px; font-size:13px; opacity:.8; line-height:1.45;">
+          Если видео не отображается, открой его в
+          <a href="https://www.youtube.com/watch?v=phRn9Thc1zc" target="_blank" rel="noopener noreferrer"
+             style="color:#ff86cf; text-decoration:none; border-bottom:1px dashed rgba(255,134,207,0.7);">
+            YouTube
+          </a>.
+        </div>
+      </div>
+
+      <!-- Подписка -->
+      <div style="margin-top:16px; padding:16px; border-radius:16px; background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,79,179,0.28);">
+
+        <div style="font-weight:750; margin-bottom:8px;">Получать новости и скидки</div>
+
+        <form id="subscribeForm" style="display:flex; gap:10px; flex-wrap:wrap;">
+          <input id="emailInput" type="email" required placeholder="Введите email"
+            style="flex:1; min-width:220px; padding:12px 14px; border-radius:14px;
+            border:1px solid rgba(255,255,255,0.18);
+            background:rgba(0,0,0,0.25); color:#fff; outline:none;" />
+
+          <button type="submit"
+            style="cursor:pointer; border:0; border-radius:14px; padding:12px 16px; font-weight:800;
+            background:#fff; color:#0b0c10;">
+            Подписаться
+          </button>
+        </form>
+
+        <div style="margin-top:8px; font-size:12px; opacity:.75;">
+          Учебная форма нужна для аналитики.
+        </div>
+      </div>
+
+      <!-- Кнопки товара -->
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+        <button id="addToCartBtn"
+          style="cursor:pointer; border:0; border-radius:14px; padding:12px 16px; font-weight:800;
+          background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,79,179,0.45);">
+          В корзину
+        </button>
+
+        <button id="buyBtn2"
+          style="cursor:pointer; border:0; border-radius:14px; padding:12px 16px; font-weight:900;
+          background:linear-gradient(135deg,#ff4fb3,#ff86cf); color:#0b0c10; box-shadow:0 10px 22px rgba(255,79,179,0.18);">
           Купить
         </button>
 
-        <a href="./index.html" style="display:inline-block; border-radius:14px; padding:12px 16px; font-weight:600; color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,0.22);">
-          Идем на главную
+        <a href="./index.html" id="backHome"
+           style="display:inline-block; border-radius:14px; padding:12px 16px; font-weight:700; color:#fff;
+           text-decoration:none; border:1px solid rgba(255,255,255,0.22);">
+          Назад на главную
         </a>
       </div>
 
-    
+      <p style="opacity:.72; margin-top:12px; font-size:13px;">
+        “В корзину” → add_to_cart, “Купить” → begin_checkout, подписка → subscribe_submit.
+      </p>
+
+    </div>
   </div>
 
-<script>
-  const CART_KEY = 'minishop_cart_v1';
+  <script>
+    const CART_KEY = 'minishop_cart_v1';
+    const PRODUCT = { id:'giftbox_1', name:'Подарочный бокс (демо)', price:1290 };
 
-  // demo product (можешь поменять цену/название)
-  const PRODUCT = {
-    id: 'giftbox_1',
-    name: 'Подарочный бокс (демо)',
-    price: 1290
-  };
+    function loadCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch { return []; } }
+    function saveCart(cart){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+    function totals(cart){
+      const count = cart.reduce((s,it)=>s+it.qty,0);
+      const total = cart.reduce((s,it)=>s+it.qty*it.price,0);
+      return {count,total};
+    }
+    function addToCart(product){
+      const cart = loadCart();
+      const found = cart.find(it => it.id === product.id);
+      if(found) found.qty += 1; else cart.push({...product, qty:1});
+      saveCart(cart);
+      return cart;
+    }
+    function fireM(goal){ try { window.ym && window.ym(106875241,'reachGoal',goal); } catch(e) {} }
+    function fireGA(name, params={}){
+      try { window.gtag && gtag('event', name, { page_name:'details', page_path:location.pathname, ...params }); } catch(e) {}
+    }
 
-  function loadCart() {
-    try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
-    catch { return []; }
-  }
+    const cartCountEl = document.getElementById('cartCount');
+    const cartTotalEl = document.getElementById('cartTotal');
+    const clearCartBtn = document.getElementById('clearCartBtn');
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const buyBtn2 = document.getElementById('buyBtn2');
+    const subscribeForm = document.getElementById('subscribeForm');
 
-  function saveCart(cart) {
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  }
+    function renderMiniCart(){
+      const cart = loadCart();
+      const {count,total} = totals(cart);
+      if(cartCountEl) cartCountEl.textContent = String(count);
+      if(cartTotalEl) cartTotalEl.textContent = String(total);
+    }
 
-  function addToCart(product) {
-    const cart = loadCart();
-    const found = cart.find(it => it.id === product.id);
-    if (found) found.qty += 1;
-    else cart.push({ ...product, qty: 1 });
-    saveCart(cart);
-  }
-
-  function fireM(goal) {
-    try { window.ym && window.ym(106875241, 'reachGoal', goal); } catch(e) {}
-  }
-
-  function fireGA(name, params = {}) {
-    try {
-      window.gtag && gtag('event', name, {
-        page_name: 'details',
-        page_path: location.pathname,
-        ...params
+    if(clearCartBtn){
+      clearCartBtn.addEventListener('click', ()=>{
+        saveCart([]);
+        renderMiniCart();
+        fireM('cart_clear');
+        fireGA('cart_clear');
       });
-    } catch(e) {}
-  }
+    }
 
-  const addToCartBtn = document.getElementById('addToCartBtn');
-  const buyBtn2 = document.getElementById('buyBtn2');
-  const subscribeForm = document.getElementById('subscribeForm');
-  const goToCartLink = document.getElementById('goToCartLink');
+    if(addToCartBtn){
+      addToCartBtn.addEventListener('click', ()=>{
+        addToCart(PRODUCT);
+        renderMiniCart();
+        fireM('add_to_cart');
+        fireGA('add_to_cart', { item_id: PRODUCT.id, item_name: PRODUCT.name, price: PRODUCT.price });
 
-  // В корзину
-  if (addToCartBtn) {
-    addToCartBtn.addEventListener('click', () => {
-      addToCart(PRODUCT);
+        const old = addToCartBtn.textContent;
+        addToCartBtn.textContent = 'Добавлено ✓';
+        setTimeout(()=>addToCartBtn.textContent = old, 900);
+      });
+    }
 
-      fireM('add_to_cart');
-      fireGA('add_to_cart', { item_id: PRODUCT.id, item_name: PRODUCT.name, price: PRODUCT.price });
+    if(buyBtn2){
+      buyBtn2.addEventListener('click', ()=>{
+        addToCart(PRODUCT);
+        fireM('begin_checkout');
+        fireGA('begin_checkout', { item_id: PRODUCT.id, item_name: PRODUCT.name, price: PRODUCT.price });
+        window.location.href = './cart.html';
+      });
+    }
 
-      const old = addToCartBtn.textContent;
-      addToCartBtn.textContent = 'Добавлено ✓';
-      setTimeout(() => addToCartBtn.textContent = old, 900);
-    });
-  }
+    if(subscribeForm){
+      subscribeForm.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        fireM('subscribe_submit');
+        fireGA('subscribe_submit');
+        alert('Подписка оформлена (демо).');
+        subscribeForm.reset();
+      });
+    }
 
-  // Купить = добавить + перейти в корзину
-  if (buyBtn2) {
-    buyBtn2.addEventListener('click', () => {
-      addToCart(PRODUCT);
-
-      fireM('begin_checkout');
-      fireGA('begin_checkout', { item_id: PRODUCT.id, item_name: PRODUCT.name, price: PRODUCT.price });
-
-      // переход на страницу корзины
-      window.location.href = './cart.html';
-    });
-  }
-
-  // Переход в корзину (событие)
-  if (goToCartLink) {
-    goToCartLink.addEventListener('click', () => {
-      fireGA('cart_open_link');
-    });
-  }
-
-  // Подписка
-  if (subscribeForm) {
-    subscribeForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      fireM('subscribe_submit');
-      fireGA('subscribe_submit');
-
-      alert('Подписка оформлена (демо).');
-      subscribeForm.reset();
-    });
-  }
-</script>
-    
+    renderMiniCart();
+  </script>
 </body>
+    
 </html>
