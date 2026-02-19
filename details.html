@@ -172,85 +172,179 @@ color:#f6f7fb;">
   </div>
 
   <script>
-    const CART_KEY = 'minishop_cart_v1';
-    const PRODUCT = { id:'giftbox_1', name:'Подарочный бокс (демо)', price:1290 };
+  // =========================
+  // DETAILS — ANALYTICS + CART
+  // База для ЛР 7–10
+  // =========================
 
-    function loadCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch { return []; } }
-    function saveCart(cart){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
-    function totals(cart){
-      const count = cart.reduce((s,it)=>s+it.qty,0);
-      const total = cart.reduce((s,it)=>s+it.qty*it.price,0);
-      return {count,total};
-    }
-    function addToCart(product){
-      const cart = loadCart();
-      const found = cart.find(it => it.id === product.id);
-      if(found) found.qty += 1; else cart.push({...product, qty:1});
-      saveCart(cart);
-      return cart;
-    }
-    function fireM(goal){ try { window.ym && window.ym(106875241,'reachGoal',goal); } catch(e) {} }
-    function fireGA(name, params={}){
-      try { window.gtag && gtag('event', name, { page_name:'details', page_path:location.pathname, ...params }); } catch(e) {}
-    }
+  const MID = 106875241;
 
-    const cartCountEl = document.getElementById('cartCount');
-    const cartTotalEl = document.getElementById('cartTotal');
-    const clearCartBtn = document.getElementById('clearCartBtn');
-    const addToCartBtn = document.getElementById('addToCartBtn');
-    const buyBtn2 = document.getElementById('buyBtn2');
-    const subscribeForm = document.getElementById('subscribeForm');
+  // A/B: рандом КАЖДЫЙ ЗАХОД на страницу (удобно для лабы)
+  const variant = Math.random() < 0.5 ? 'A' : 'B';
 
-    function renderMiniCart(){
+  // ----- helpers -----
+  function fireM(goal, params = {}) {
+    try { window.ym && window.ym(MID, 'reachGoal', goal, params); } catch(e) {}
+  }
+
+  function fireGA(name, params = {}) {
+    try {
+      window.gtag && gtag('event', name, {
+        page_name: 'details',
+        page_path: location.pathname,
+        variant,
+        ...params
+      });
+    } catch(e) {}
+  }
+
+  // ----- cart logic -----
+  const CART_KEY = 'minishop_cart_v1';
+  const PRODUCT = { id:'giftbox_1', name:'Подарочный бокс (демо)', price:1290 };
+
+  function loadCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch { return []; } }
+  function saveCart(cart){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+  function totals(cart){
+    const count = cart.reduce((s,it)=>s+it.qty,0);
+    const total = cart.reduce((s,it)=>s+it.qty*it.price,0);
+    return {count,total};
+  }
+  function addToCart(product){
+    const cart = loadCart();
+    const found = cart.find(it => it.id === product.id);
+    if(found) found.qty += 1; else cart.push({...product, qty:1});
+    saveCart(cart);
+    return cart;
+  }
+
+  // ----- elements -----
+  const cartCountEl = document.getElementById('cartCount');
+  const cartTotalEl = document.getElementById('cartTotal');
+
+  const clearCartBtn = document.getElementById('clearCartBtn');
+  const addToCartBtn = document.getElementById('addToCartBtn');
+  const buyBtn2 = document.getElementById('buyBtn2');
+  const goToCartLink = document.getElementById('goToCartLink');
+
+  const subscribeForm = document.getElementById('subscribeForm');
+  const emailInput = document.getElementById('emailInput');
+
+  function renderMiniCart(){
+    const cart = loadCart();
+    const {count,total} = totals(cart);
+    if(cartCountEl) cartCountEl.textContent = String(count);
+    if(cartTotalEl) cartTotalEl.textContent = String(total);
+  }
+
+  // =========================
+  // 1) Просмотр карточки товара (при заходе на details)
+  // =========================
+  fireGA('view_item', {
+    item_id: PRODUCT.id,
+    item_name: PRODUCT.name,
+    price: PRODUCT.price
+  });
+  fireM('view_item', { variant });
+
+  // =========================
+  // 2) Очистка корзины
+  // =========================
+  if(clearCartBtn){
+    clearCartBtn.addEventListener('click', () => {
+      saveCart([]);
+      renderMiniCart();
+
+      fireGA('cart_clear');
+      fireM('cart_clear');
+    });
+  }
+
+  // =========================
+  // 3) Добавить в корзину
+  // =========================
+  if(addToCartBtn){
+    addToCartBtn.addEventListener('click', () => {
+      addToCart(PRODUCT);
+      renderMiniCart();
+
+      fireGA('add_to_cart', {
+        item_id: PRODUCT.id,
+        item_name: PRODUCT.name,
+        price: PRODUCT.price
+      });
+      fireM('add_to_cart', { variant });
+
+      const old = addToCartBtn.textContent;
+      addToCartBtn.textContent = 'Добавлено ✓';
+      setTimeout(() => addToCartBtn.textContent = old, 900);
+    });
+  }
+
+  // =========================
+  // 4) Перейти в корзину (логируем view_cart)
+  // =========================
+  if(goToCartLink){
+    goToCartLink.addEventListener('click', () => {
       const cart = loadCart();
       const {count,total} = totals(cart);
-      if(cartCountEl) cartCountEl.textContent = String(count);
-      if(cartTotalEl) cartTotalEl.textContent = String(total);
-    }
 
-    if(clearCartBtn){
-      clearCartBtn.addEventListener('click', ()=>{
-        saveCart([]);
-        renderMiniCart();
-        fireM('cart_clear');
-        fireGA('cart_clear');
+      fireGA('view_cart', { cart_items: count, cart_total: total });
+      fireM('view_cart', { variant });
+      // Переход по href выполнится сам
+    });
+  }
+
+  // =========================
+  // 5) Купить -> begin_checkout + переход в cart.html
+  // =========================
+  if(buyBtn2){
+    buyBtn2.addEventListener('click', () => {
+      addToCart(PRODUCT);
+      renderMiniCart();
+
+      fireGA('begin_checkout', {
+        item_id: PRODUCT.id,
+        item_name: PRODUCT.name,
+        price: PRODUCT.price
       });
-    }
+      fireM('begin_checkout', { variant });
 
-    if(addToCartBtn){
-      addToCartBtn.addEventListener('click', ()=>{
-        addToCart(PRODUCT);
-        renderMiniCart();
-        fireM('add_to_cart');
-        fireGA('add_to_cart', { item_id: PRODUCT.id, item_name: PRODUCT.name, price: PRODUCT.price });
-
-        const old = addToCartBtn.textContent;
-        addToCartBtn.textContent = 'Добавлено ✓';
-        setTimeout(()=>addToCartBtn.textContent = old, 900);
-      });
-    }
-
-    if(buyBtn2){
-      buyBtn2.addEventListener('click', ()=>{
-        addToCart(PRODUCT);
-        fireM('begin_checkout');
-        fireGA('begin_checkout', { item_id: PRODUCT.id, item_name: PRODUCT.name, price: PRODUCT.price });
+      setTimeout(() => {
         window.location.href = './cart.html';
-      });
-    }
+      }, 150);
+    });
+  }
 
-    if(subscribeForm){
-      subscribeForm.addEventListener('submit', (e)=>{
-        e.preventDefault();
-        fireM('subscribe_submit');
-        fireGA('subscribe_submit');
-        alert('Подписка оформлена (демо).');
-        subscribeForm.reset();
-      });
-    }
+  // =========================
+  // 6) Подписка: click + submit
+  // =========================
+  if(subscribeForm){
+    // клик по кнопке
+    subscribeForm.addEventListener('click', (e) => {
+      const isBtn = e.target && e.target.tagName === 'BUTTON';
+      if(!isBtn) return;
 
-    renderMiniCart();
-  </script>
+      fireGA('subscribe_click');
+      fireM('subscribe_click');
+    });
+
+    // отправка формы
+    subscribeForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const hasEmail = emailInput && emailInput.value ? 'yes' : 'no';
+
+      fireGA('subscribe_submit', { has_email: hasEmail });
+      fireM('subscribe_submit', { variant });
+
+      alert('Подписка оформлена (демо).');
+      subscribeForm.reset();
+    });
+  }
+
+  // ----- init -----
+  renderMiniCart();
+</script>
 </body>
     
 </html>
