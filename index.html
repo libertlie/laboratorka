@@ -261,91 +261,89 @@
   </div>
 
   <script>
-    // helpers for analytics
-    const MID = 106875241;
+  // helpers for analytics
+  const MID = 106875241;
 
-    function fireM(goal){
-      try { window.ym && window.ym(MID, 'reachGoal', goal); } catch(e) {}
-    }
-    function fireGA(name, params={}){
-      try { window.gtag && gtag('event', name, { page_path: location.pathname, ...params }); } catch(e) {}
-    }
+  function fireM(goal){
+    try { window.ym && window.ym(MID, 'reachGoal', goal); } catch(e) {}
+  }
+  function fireGA(name, params = {}){
+    try { window.gtag && gtag('event', name, { page_path: location.pathname, ...params }); } catch(e) {}
+  }
 
-    // Elements
-    const buyBtn = document.getElementById('buyBtn');
-    const subForm = document.getElementById('subForm');
-    const okMsg = document.getElementById('okMsg');
+  // elements
+  const buyBtn = document.getElementById('buyBtn');
+  const subForm = document.getElementById('subForm');
+  const okMsg = document.getElementById('okMsg');
 
-    const detailsBtn = document.getElementById('detailsBtn');
-    const goArticle = document.getElementById('goArticle');
-    const goArticle2 = document.getElementById('goArticle2');
-    const goDetails2 = document.getElementById('goDetails2');
+  const detailsBtn = document.getElementById('detailsBtn');
+  const goArticle = document.getElementById('goArticle');
+  const goArticle2 = document.getElementById('goArticle2');
+  const goDetails2 = document.getElementById('goDetails2');
 
-    // ===== A/B TEST: Buy button text =====
-    let abVariant = localStorage.getItem('ab_buybtn_variant');
-    if (!abVariant) {
-      abVariant = Math.random() < 0.5 ? 'A' : 'B';
-      localStorage.setItem('ab_buybtn_variant', abVariant);
-    }
+  // ===== A/B RANDOM (каждый раз новый) =====
+  const abVariant = Math.random() < 0.5 ? 'A' : 'B';
 
-    // Variant B changes button text
-    if (buyBtn && abVariant === 'B') {
-      buyBtn.textContent = 'Купить сейчас';
-    } else if (buyBtn) {
-      buyBtn.textContent = 'Купить';
-    }
+  // Variant B changes
+  if (buyBtn && abVariant === 'B') {
+    buyBtn.textContent = 'Купить сейчас';
+  } else if (buyBtn) {
+    buyBtn.textContent = 'Купить';
+  }
 
-    // Log variant view
-    fireGA('ab_buybtn_view', { variant: abVariant, page: 'index.html' });
+  // Send "view" event for AB
+  fireGA('ab_buybtn_view', { variant: abVariant, page: 'index.html' });
 
-    // buy click
-    if (buyBtn){
-      buyBtn.addEventListener('click', () => {
-        fireM('buy_click');
-        fireGA('buy_click', { page: 'index.html', variant: abVariant });
-        alert('Учебная покупка оформлена (демо).');
-      });
-    }
+  // buy click
+  if (buyBtn){
+    buyBtn.addEventListener('click', () => {
+      fireM('buy_click');
+      fireGA('buy_click', { page: 'index.html', variant: abVariant });
+      alert('Учебная покупка оформлена (демо).');
+    });
+  }
 
-    // details click
-    if (detailsBtn){
-      detailsBtn.addEventListener('click', () => {
-        fireM('details_click');
-        fireGA('details_click', { page: 'index.html' });
-      });
-    }
+  // details click
+  if (detailsBtn){
+    detailsBtn.addEventListener('click', () => {
+      fireM('details_click');
+      fireGA('details_click', { page: 'index.html' });
+    });
+  }
 
-    // article clicks
-    function hookArticleClick(el){
-      if (!el) return;
-      el.addEventListener('click', () => {
-        fireM('article_click');
-        fireGA('article_click', { page: 'index.html' });
-      });
-    }
-    hookArticleClick(goArticle);
-    hookArticleClick(goArticle2);
+  // article clicks
+  function hookArticleClick(el){
+    if (!el) return;
+    el.addEventListener('click', () => {
+      fireM('article_click');
+      fireGA('article_click', { page: 'index.html' });
+    });
+  }
+  hookArticleClick(goArticle);
+  hookArticleClick(goArticle2);
 
-    // details from bottom block
-    if (goDetails2){
-      goDetails2.addEventListener('click', () => {
-        fireM('details_click');
-        fireGA('details_click', { page: 'index.html', from: 'content_block' });
-      });
-    }
+  // details from bottom block
+  if (goDetails2){
+    goDetails2.addEventListener('click', () => {
+      fireM('details_click');
+      fireGA('details_click', { page: 'index.html', from: 'content_block' });
+    });
+  }
 
-    // subscribe
-    if (subForm){
-      subForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        fireM('subscribe_submit');
-        fireGA('subscribe_submit', { page: 'index.html' });
+  // subscribe
+  if (subForm){
+    subForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      fireM('subscribe_submit');
+      fireGA('subscribe_submit', { page: 'index.html' });
 
-        okMsg.style.display = 'block';
-        subForm.reset();
-        setTimeout(() => { okMsg.style.display = 'none'; }, 2500);
-      });
-    }
-  </script>
+      if (okMsg) okMsg.style.display = 'block';
+      subForm.reset();
+
+      setTimeout(() => { if (okMsg) okMsg.style.display = 'none'; }, 2500);
+    });
+  }
+</script>
 </body>
 </html>
+
