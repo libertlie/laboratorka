@@ -230,7 +230,7 @@
           <input id="email" name="email" type="email" placeholder="name@example.com" required />
 
           <div class="row" style="margin-top:12px;">
-            <button class="btn btn-primary" type="submit">Подписаться</button>
+            <button class="btn btn-primary" type="submit" id="subscribeBtn">Подписаться</button>
           </div>
 
           <div id="okMsg" class="ok">Спасибо! Заявка принята ✅</div>
@@ -260,135 +260,118 @@
 
   </div>
 
-<script>
+  <!-- ====== ONE CLEAN SCRIPT (do not nest scripts) ====== -->
+  <script>
+    const MID = 106875241;
 
+    function fireM(goal, params = {}) {
+      try { window.ym && window.ym(MID, 'reachGoal', goal, params); } catch(e) {}
+    }
 
-const MID = 106875241;
+    function fireGA(name, params = {}) {
+      try { window.gtag && gtag('event', name, { page_path: location.pathname, ...params }); } catch(e) {}
+    }
 
-/* ===== HELPERS ===== */
-function fireM(goal, params = {}) {
-  try { window.ym && window.ym(MID, 'reachGoal', goal, params); } catch(e) {}
-}
+    // ===== A/B: random every page load =====
+    const variant = Math.random() < 0.5 ? 'A' : 'B';
 
-function fireGA(name, params = {}) {
-  try {
-    window.gtag && gtag('event', name, {
-      page_path: location.pathname,
-      ...params
-    });
-  } catch(e) {}
-}
+    // elements
+    const buyBtn = document.getElementById('buyBtn');
+    const detailsBtn = document.getElementById('detailsBtn');
+    const goArticle = document.getElementById('goArticle');
+    const goArticle2 = document.getElementById('goArticle2');
+    const goDetails2 = document.getElementById('goDetails2');
+    const subForm = document.getElementById('subForm');
+    const okMsg = document.getElementById('okMsg');
+    const subscribeBtn = document.getElementById('subscribeBtn');
 
-/* ===== ELEMENTS ===== */
-const buyBtn = document.getElementById('buyBtn');
-const subForm = document.getElementById('subForm');
-const okMsg = document.getElementById('okMsg');
-const detailsBtn = document.getElementById('detailsBtn');
-const goArticle = document.getElementById('goArticle');
-const goArticle2 = document.getElementById('goArticle2');
-const goDetails2 = document.getElementById('goDetails2');
-const subscribeBtn = document.querySelector('#subForm button');
+    // A/B visual change
+    if (buyBtn && variant === 'B') buyBtn.textContent = 'Купить сейчас';
+    if (buyBtn && variant === 'A') buyBtn.textContent = 'Купить';
 
-/* ===== A/B VARIANT (рандом каждый заход) ===== */
-const abVariant = Math.random() < 0.5 ? 'A' : 'B';
+    // ===== базовое событие просмотра продукта (для ЛР 7–10) =====
+    fireGA('view_product', { product: 'gift_box', price: 1990, variant });
+    fireM('view_product', { variant });
 
-if (buyBtn) {
-  buyBtn.textContent = abVariant === 'B'
-    ? 'Купить сейчас'
-    : 'Купить';
-}
+    // ===== A/B variant view =====
+    fireGA('ab_variant_view', { variant });
+    fireM('ab_variant_view', { variant });
 
-/* Отправляем просмотр варианта */
-fireGA('ab_variant_view', { variant: abVariant });
-fireM('ab_variant_view', { variant: abVariant });
+    // ===== BUY CLICK =====
+    if (buyBtn){
+      buyBtn.addEventListener('click', () => {
+        fireGA('buy_click', { variant, page: 'index' });
+        fireM('buy_click', { variant });
+        alert('Учебная покупка оформлена (демо).');
+      });
+    }
 
-/* ===== BUY CLICK ===== */
-if (buyBtn) {
-  buyBtn.addEventListener('click', () => {
-    fireGA('buy_click', { variant: abVariant });
-    fireM('buy_click', { variant: abVariant });
-    alert('Учебная покупка оформлена (демо).');
-  });
-}
+    // ===== DETAILS CLICK =====
+    function logDetails(from = 'top'){
+      fireGA('details_click', { variant, page: 'index', from });
+      fireM('details_click', { variant });
+    }
 
-/* ===== VIEW ITEM (Подробнее) ===== */
-if (detailsBtn) {
-  detailsBtn.addEventListener('click', () => {
-    fireGA('view_item', { variant: abVariant });
-    fireM('view_item', { variant: abVariant });
-  });
-}
+    if (detailsBtn) detailsBtn.addEventListener('click', () => logDetails('top'));
+    if (goDetails2) goDetails2.addEventListener('click', () => logDetails('content_block'));
 
-if (goDetails2) {
-  goDetails2.addEventListener('click', () => {
-    fireGA('view_item', { variant: abVariant, from: 'content_block' });
-    fireM('view_item', { variant: abVariant, from: 'content_block' });
-  });
-}
+    // ===== ARTICLE CLICK =====
+    function logArticle(from = 'top'){
+      fireGA('article_click', { variant, page: 'index', from });
+      fireM('article_click', { variant });
+      // Для ЛР: отдельное "прочитал/открыл контент"
+      fireGA('read_article', { variant, from });
+      fireM('read_article', { variant });
+    }
 
-/* ===== ARTICLE READ ===== */
-function hookArticleClick(el, from = 'top') {
-  if (!el) return;
-  el.addEventListener('click', () => {
-    fireGA('read_article', { variant: abVariant, from });
-    fireM('read_article', { variant: abVariant, from });
-  });
-}
-hookArticleClick(goArticle, 'top');
-hookArticleClick(goArticle2, 'content_block');
+    if (goArticle) goArticle.addEventListener('click', () => logArticle('top'));
+    if (goArticle2) goArticle2.addEventListener('click', () => logArticle('content_block'));
 
-/* ===== SUBSCRIBE CLICK ===== */
-if (subscribeBtn) {
-  subscribeBtn.addEventListener('click', () => {
-    fireGA('subscribe_click', { variant: abVariant });
-    fireM('subscribe_click', { variant: abVariant });
-  });
-}
+    // ===== SUBSCRIBE CLICK =====
+    if (subscribeBtn){
+      subscribeBtn.addEventListener('click', () => {
+        fireGA('subscribe_click', { variant, page: 'index' });
+        fireM('subscribe_click', { variant });
+      });
+    }
 
-/* ===== SUBSCRIBE SUBMIT ===== */
-if (subForm) {
-  subForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+    // ===== SUBSCRIBE SUBMIT =====
+    if (subForm){
+      subForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        fireGA('subscribe_submit', { variant, page: 'index' });
+        fireM('subscribe_submit', { variant });
 
-    fireGA('subscribe_submit', { variant: abVariant });
-    fireM('subscribe_submit', { variant: abVariant });
+        if (okMsg) okMsg.style.display = 'block';
+        subForm.reset();
+        setTimeout(() => { if (okMsg) okMsg.style.display = 'none'; }, 2500);
+      });
+    }
 
-    if (okMsg) okMsg.style.display = 'block';
-    subForm.reset();
+    // ===== SCROLL (50% and 90%) =====
+    let sent50 = false;
+    let sent90 = false;
 
-    setTimeout(() => {
-      if (okMsg) okMsg.style.display = 'none';
-    }, 2500);
-  });
-}
+    function handleScroll(){
+      const doc = document.documentElement;
+      const scrollTop = window.scrollY || doc.scrollTop || 0;
+      const height = (doc.scrollHeight - doc.clientHeight) || 1;
+      const percent = (scrollTop / height) * 100;
 
-/* ===== SCROLL TRACKING ===== */
-let sent50 = false;
-let sent90 = false;
+      if (!sent50 && percent >= 50){
+        sent50 = true;
+        fireGA('scroll_50', { variant, page: 'index' });
+        fireM('scroll_50', { variant });
+      }
 
-function handleScroll() {
-  const doc = document.documentElement;
-  const scrollTop = window.scrollY || doc.scrollTop;
-  const height = doc.scrollHeight - doc.clientHeight;
-  const percent = (scrollTop / height) * 100;
+      if (!sent90 && percent >= 90){
+        sent90 = true;
+        fireGA('scroll_90', { variant, page: 'index' });
+        fireM('scroll_90', { variant });
+      }
+    }
 
-  if (!sent50 && percent >= 50) {
-    sent50 = true;
-    fireGA('scroll_50', { variant: abVariant });
-    fireM('scroll_50', { variant: abVariant });
-  }
-
-  if (!sent90 && percent >= 90) {
-    sent90 = true;
-    fireGA('scroll_90', { variant: abVariant });
-    fireM('scroll_90', { variant: abVariant });
-  }
-}
-
-window.addEventListener('scroll', handleScroll, { passive: true });
-
-</script>
+    window.addEventListener('scroll', handleScroll, { passive: true });
+  </script>
 </body>
 </html>
-
-
