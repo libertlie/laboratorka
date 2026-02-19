@@ -90,7 +90,7 @@ border:1px solid rgba(255,79,179,0.35);">
 <!-- Модалка корзины -->
 <div id="cartModal"
   style="position:fixed; inset:0; display:none; align-items:center; justify-content:center;
-  background:rgba(0,0,0,0.62); padding:16px; z-index:9999;">
+  background:rgba(0,0,0,0.62); padding:16px; z-index:9999; pointer-events:none;">
 
   <div style="width:min(720px, 96%); border-radius:18px; padding:18px;
     background:rgba(20,12,22,0.92);
@@ -307,17 +307,16 @@ background:linear-gradient(135deg,#ff4fb3,#ff86cf); color:#0b0c10; box-shadow:0 
     `).join('');
   }
 
-  function openModal() {
-    if (!cartModal) return;
-    cartModal.style.display = 'flex';
-    renderCart();
-    fireGA('cart_open');
-  }
+function openModal() {
+  cartModal.style.display = 'flex';
+  cartModal.style.pointerEvents = 'auto';
+  renderCart();
+}
 
-  function closeModal() {
-    if (!cartModal) return;
-    cartModal.style.display = 'none';
-  }
+function closeModal() {
+  cartModal.style.display = 'none';
+  cartModal.style.pointerEvents = 'none';
+}
 
   // ===== Cart actions =====
   function addToCart(product) {
