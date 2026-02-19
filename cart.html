@@ -104,119 +104,177 @@ color:#f6f7fb;">
     </div>
   </div>
 
-  <script>
-    const CART_KEY = 'minishop_cart_v1';
+<script>
 
-    function loadCart() {
-      try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
-      catch { return []; }
+  const MID = 106875241;
+  const variant = Math.random() < 0.5 ? 'A' : 'B'; // рандом каждый заход, как ты хочешь
+
+  const CART_KEY = 'minishop_cart_v1';
+
+  function loadCart() {
+    try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
+    catch { return []; }
+  }
+  function saveCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+  function totals(cart) {
+    const count = cart.reduce((s, it) => s + it.qty, 0);
+    const total = cart.reduce((s, it) => s + it.qty * it.price, 0);
+    return { count, total };
+  }
+
+  function fireM(goal, params = {}) {
+    try { window.ym && window.ym(MID,'reachGoal',goal, params); } catch(e) {}
+  }
+
+  function fireGA(name, params = {}) {
+    try {
+      window.gtag && gtag('event', name, {
+        page_name: 'cart',
+        page_path: location.pathname,
+        variant,
+        ...params
+      });
+    } catch(e) {}
+  }
+
+  const cartCount = document.getElementById('cartCount');
+  const cartTotal = document.getElementById('cartTotal');
+  const cartItems = document.getElementById('cartItems');
+  const clearCartBtn = document.getElementById('clearCartBtn');
+  const checkoutBtn = document.getElementById('checkoutBtn');
+
+  function render() {
+    const cart = loadCart();
+    const { count, total } = totals(cart);
+
+    cartCount.textContent = String(count);
+    cartTotal.textContent = String(total);
+
+    if (cart.length === 0) {
+      cartItems.innerHTML = `
+        <div style="padding:14px; border-radius:14px; background:rgba(255,255,255,0.05);
+          border:1px solid rgba(255,255,255,0.12); opacity:.9;">
+          Корзина пустая. Добавь товар на странице “Подробнее”.
+        </div>`;
+      return;
     }
-    function saveCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
-    function totals(cart) {
-      const count = cart.reduce((s, it) => s + it.qty, 0);
-      const total = cart.reduce((s, it) => s + it.qty * it.price, 0);
-      return { count, total };
-    }
-    function fireM(goal) { try { window.ym && window.ym(106875241,'reachGoal',goal); } catch(e) {} }
-    function fireGA(name, params={}) {
-      try { window.gtag && gtag('event', name, { page_name:'cart', page_path:location.pathname, ...params }); } catch(e) {}
-    }
 
-    const cartCount = document.getElementById('cartCount');
-    const cartTotal = document.getElementById('cartTotal');
-    const cartItems = document.getElementById('cartItems');
-    const clearCartBtn = document.getElementById('clearCartBtn');
-    const checkoutBtn = document.getElementById('checkoutBtn');
-
-    function render() {
-      const cart = loadCart();
-      const { count, total } = totals(cart);
-      cartCount.textContent = String(count);
-      cartTotal.textContent = String(total);
-
-      if (cart.length === 0) {
-        cartItems.innerHTML = `
-          <div style="padding:14px; border-radius:14px; background:rgba(255,255,255,0.05);
-            border:1px solid rgba(255,255,255,0.12); opacity:.9;">
-            Корзина пустая. Добавь товар на странице “Подробнее”.
-          </div>`;
-        return;
-      }
-
-      cartItems.innerHTML = cart.map((it, idx) => `
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
-          padding:12px; border-radius:14px; background:rgba(255,255,255,0.05);
-          border:1px solid rgba(255,255,255,0.12);">
-          <div>
-            <div style="font-weight:850;">${it.name}</div>
-            <div style="font-size:13px; opacity:.85;">${it.price} ₽ · Кол-во: <b>${it.qty}</b></div>
-          </div>
-
-          <div style="display:flex; gap:8px; align-items:center;">
-            <button data-action="minus" data-idx="${idx}"
-              style="cursor:pointer; border:0; border-radius:12px; padding:8px 10px; font-weight:900;
-              background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.16);">−</button>
-
-            <button data-action="plus" data-idx="${idx}"
-              style="cursor:pointer; border:0; border-radius:12px; padding:8px 10px; font-weight:900;
-              background:rgba(255,79,179,0.18); color:#fff; border:1px solid rgba(255,79,179,0.35);">+</button>
-
-            <button data-action="remove" data-idx="${idx}"
-              style="cursor:pointer; border:0; border-radius:12px; padding:8px 10px; font-weight:900;
-              background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.16);">Удалить</button>
-          </div>
+    cartItems.innerHTML = cart.map((it, idx) => `
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
+        padding:12px; border-radius:14px; background:rgba(255,255,255,0.05);
+        border:1px solid rgba(255,255,255,0.12);">
+        <div>
+          <div style="font-weight:850;">${it.name}</div>
+          <div style="font-size:13px; opacity:.85;">${it.price} ₽ · Кол-во: <b>${it.qty}</b></div>
         </div>
-      `).join('');
+
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button data-action="minus" data-idx="${idx}"
+            style="cursor:pointer; border:0; border-radius:12px; padding:8px 10px; font-weight:900;
+            background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.16);">−</button>
+
+          <button data-action="plus" data-idx="${idx}"
+            style="cursor:pointer; border:0; border-radius:12px; padding:8px 10px; font-weight:900;
+            background:rgba(255,79,179,0.18); color:#fff; border:1px solid rgba(255,79,179,0.35);">+</button>
+
+          <button data-action="remove" data-idx="${idx}"
+            style="cursor:pointer; border:0; border-radius:12px; padding:8px 10px; font-weight:900;
+            background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.16);">Удалить</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // =========================
+  // 1) VIEW CART (при открытии корзины)
+  // =========================
+  (function trackViewCart(){
+    const cart = loadCart();
+    const { count, total } = totals(cart);
+
+    fireGA('view_cart', { items_count: count, value: total, currency: 'RUB' });
+    fireM('view_cart', { variant });
+  })();
+
+  // =========================
+  // 2) Обработчики внутри списка товаров
+  // =========================
+  cartItems.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+
+    const action = btn.getAttribute('data-action');
+    const idx = Number(btn.getAttribute('data-idx'));
+
+    const cart = loadCart();
+    if (!cart[idx]) return;
+
+    const item = cart[idx];
+
+    if (action === 'plus') {
+      item.qty += 1;
+
+      fireGA('add_to_cart', { item_id: item.id, item_name: item.name, price: item.price, qty: 1 });
+      fireM('add_to_cart', { variant });
+
+    } else if (action === 'minus') {
+      item.qty -= 1;
+
+      // если уменьшаем — это логически remove_from_cart (удаление 1 единицы)
+      fireGA('remove_from_cart', { item_id: item.id, item_name: item.name, price: item.price, qty: 1 });
+      fireM('remove_from_cart', { variant });
+
+      if (item.qty <= 0) cart.splice(idx, 1);
+
+    } else if (action === 'remove') {
+      // удаляем весь товар целиком
+      fireGA('remove_from_cart', { item_id: item.id, item_name: item.name, price: item.price, qty: item.qty });
+      fireM('remove_from_cart', { variant });
+
+      cart.splice(idx, 1);
     }
 
-    // events inside list
-    cartItems.addEventListener('click', (e) => {
-      const btn = e.target.closest('button');
-      if (!btn) return;
+    saveCart(cart);
+    render();
+  });
 
-      const action = btn.getAttribute('data-action');
-      const idx = Number(btn.getAttribute('data-idx'));
-      const cart = loadCart();
-      if (!cart[idx]) return;
+  // =========================
+  // 3) Очистить корзину
+  // =========================
+  clearCartBtn.addEventListener('click', () => {
+    saveCart([]);
 
-      if (action === 'plus') {
-        cart[idx].qty += 1;
-        fireM('cart_qty_plus');
-        fireGA('cart_qty_plus', { item_id: cart[idx].id });
-      } else if (action === 'minus') {
-        cart[idx].qty -= 1;
-        fireM('cart_qty_minus');
-        fireGA('cart_qty_minus', { item_id: cart[idx].id });
-        if (cart[idx].qty <= 0) cart.splice(idx, 1);
-      } else if (action === 'remove') {
-        fireM('cart_remove');
-        fireGA('cart_remove', { item_id: cart[idx].id });
-        cart.splice(idx, 1);
-      }
-
-      saveCart(cart);
-      render();
-    });
-
-    clearCartBtn.addEventListener('click', () => {
-      saveCart([]);
-      fireM('cart_clear');
-      fireGA('cart_clear');
-      render();
-    });
-
-    checkoutBtn.addEventListener('click', () => {
-      const cart = loadCart();
-      const { count, total } = totals(cart);
-      fireM('checkout_demo');
-      fireGA('checkout_demo', { items_count: count, total_value: total });
-      alert('Оформление заказа (демо).');
-    });
-
-    // page view event
-    fireGA('cart_view');
+    fireGA('cart_clear');
+    fireM('cart_clear');
 
     render();
-  </script>
+  });
+
+  // =========================
+  // 4) Оформить покупку (DEMO PURCHASE)
+  // =========================
+  checkoutBtn.addEventListener('click', () => {
+    const cart = loadCart();
+    const { count, total } = totals(cart);
+
+    // "покупка" (демо)
+    fireGA('purchase', {
+      transaction_id: 'demo_' + Date.now(),
+      value: total,
+      currency: 'RUB',
+      items_count: count
+    });
+    fireM('purchase', { variant });
+
+    alert('Оформление заказа (демо).');
+
+    // по желанию: очищаем корзину после "покупки"
+    // saveCart([]);
+    // render();
+  });
+
+  // init render
+  render();
+</script>
 </body>
 </html>
