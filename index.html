@@ -276,7 +276,7 @@
     }
 
     const buyBtn = document.getElementById('buyBtn');
-    <script>
+   <script>
   // helpers for analytics
   const MID = 106875241;
 
@@ -288,6 +288,13 @@
   }
 
   const buyBtn = document.getElementById('buyBtn');
+  const subForm = document.getElementById('subForm');
+  const okMsg = document.getElementById('okMsg');
+
+  const detailsBtn = document.getElementById('detailsBtn');
+  const goArticle = document.getElementById('goArticle');
+  const goArticle2 = document.getElementById('goArticle2');
+  const goDetails2 = document.getElementById('goDetails2');
 
   // ===== A/B TEST (Buy button text) =====
   let abVariant = localStorage.getItem('ab_buybtn_variant');
@@ -301,65 +308,59 @@
     buyBtn.textContent = 'Купить сейчас';
   }
 
+  // Логируем показ варианта
   fireGA('ab_buybtn_view', { variant: abVariant, page: 'index.html' });
-    const subForm = document.getElementById('subForm');
-  const okMsg = document.getElementById('okMsg');
-
-  const detailsBtn = document.getElementById('detailsBtn');
-  const goArticle = document.getElementById('goArticle');
-  const goArticle2 = document.getElementById('goArticle2');
-  const goDetails2 = document.getElementById('goDetails2');
 
   // buy click
   if (buyBtn){
     buyBtn.addEventListener('click', () => {
       fireM('buy_click');
-      fireGA('buy_click', { page: 'index.html', variant: abVariant }); // <-- добавили variant
+      fireGA('buy_click', { page: 'index.html', variant: abVariant });
       alert('Учебная покупка оформлена (демо).');
     });
   }
 
+  // details click
+  if (detailsBtn){
+    detailsBtn.addEventListener('click', () => {
+      fireM('details_click');
+      fireGA('details_click', { page: 'index.html' });
+    });
+  }
 
-    if (detailsBtn){
-      detailsBtn.addEventListener('click', () => {
-        fireM('details_click');
-        fireGA('details_click', { page: 'index.html' });
-      });
-    }
+  // article clicks
+  function hookArticleClick(el){
+    if (!el) return;
+    el.addEventListener('click', () => {
+      fireM('article_click');
+      fireGA('article_click', { page: 'index.html' });
+    });
+  }
+  hookArticleClick(goArticle);
+  hookArticleClick(goArticle2);
 
-    // article clicks
-    function hookArticleClick(el){
-      if (!el) return;
-      el.addEventListener('click', () => {
-        fireM('article_click');
-        fireGA('article_click', { page: 'index.html' });
-      });
-    }
-    hookArticleClick(goArticle);
-    hookArticleClick(goArticle2);
+  // details from bottom block
+  if (goDetails2){
+    goDetails2.addEventListener('click', () => {
+      fireM('details_click');
+      fireGA('details_click', { page: 'index.html', from: 'content_block' });
+    });
+  }
 
-    // details from bottom block
-    if (goDetails2){
-      goDetails2.addEventListener('click', () => {
-        fireM('details_click');
-        fireGA('details_click', { page: 'index.html', from: 'content_block' });
-      });
-    }
+  // subscribe
+  if (subForm){
+    subForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      fireM('subscribe_submit');
+      fireGA('subscribe_submit', { page: 'index.html' });
 
-    // subscribe
-    if (subForm){
-      subForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        fireM('subscribe_submit');
-        fireGA('subscribe_submit', { page: 'index.html' });
-
-        okMsg.style.display = 'block';
-        subForm.reset();
-
-        setTimeout(() => { okMsg.style.display = 'none'; }, 2500);
-      });
-    }
-  </script>
+      okMsg.style.display = 'block';
+      subForm.reset();
+      setTimeout(() => { okMsg.style.display = 'none'; }, 2500);
+    });
+  }
+</script>
 </body>
 </html>
+
 
